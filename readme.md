@@ -4,6 +4,7 @@
 ```
 # rustをインストール
 $ curl https://sh.rustup.rs -sSf | sh
+$ rustup update
 
 # データベースを立てる
 $ docker-compose up
@@ -13,9 +14,7 @@ $ psql -h localhost -p 5432 -U postgres -d goyotashi
 # （sql/に従ってテーブルを作成）
 
 # ビルド&run
-$ cargo build
 $ cargo run
-
 ```
 
 ## seeds

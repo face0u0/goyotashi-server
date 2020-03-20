@@ -1,9 +1,10 @@
 [package]
 name = "goyotashi_server"
 version = "0.1.0"
-authors = ["hiroki <face9363>"]
-edition = "2018"
+authors = ["face0u0"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rocket = "0.4"
+rocket_contrib = { version = "0.4", features = ["json"] }
