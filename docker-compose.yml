@@ -1,0 +1,16 @@
+version: "3"
+services:
+  rdbms:
+    image: postgres
+    container_name: goyotash-database
+    ports:
+    - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+      TZ: Asia/Tokyo
+    volumes:
+    - goyotash-data-postgre:/var/lib/postgresql/data
+
+volumes:
+  goyotash-data-postgre:
