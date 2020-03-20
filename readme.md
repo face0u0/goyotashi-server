@@ -9,7 +9,7 @@ $ curl https://sh.rustup.rs -sSf | sh
 $ docker-compose up
 
 # テーブル作成
-$ psql -h localhost -p 5432 -U postgres
+$ psql -h localhost -p 5432 -U postgres -d goyotashi
 # （sql/に従ってテーブルを作成）
 
 # ビルド&run
