@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     icon TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (uid)
 );
 CREATE INDEX ON users (uid);
 
@@ -28,7 +29,8 @@ CREATE TABLE IF NOT EXISTS restaurants (
     lng NUMERIC NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (place_id)
 );
 CREATE INDEX ON restaurants (name, lat, lng, place_id);
 
@@ -40,7 +42,8 @@ CREATE TABLE IF NOT EXISTS members (
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (community_id) REFERENCES communities(id)
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+    UNIQUE (user_id, community_id)
 );
 
 CREATE TABLE IF NOT EXISTS pins (
@@ -51,7 +54,8 @@ CREATE TABLE IF NOT EXISTS pins (
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (restaurant_id) REFERENCES restaurants(id),
-    FOREIGN KEY (community_id) REFERENCES communities(id)
+    FOREIGN KEY (community_id) REFERENCES communities(id),
+    UNIQUE (restaurant_id, community_id)
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
@@ -64,5 +68,6 @@ CREATE TABLE IF NOT EXISTS reviews (
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES members(id),
-    FOREIGN KEY (pin_id) REFERENCES pins(id)
+    FOREIGN KEY (pin_id) REFERENCES pins(id),
+    UNIQUE (pin_id, member_id)
 );
