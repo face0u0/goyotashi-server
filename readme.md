@@ -211,16 +211,37 @@ no body
 }
 ```
 ### 店追加 `[POST] /pins`
+- request
 ```json
 {
 	"place_id": 391021,
 	"community_id": 19201
 }
 ```
+- response (200 OK)
 ```
 no body
 ```
-
+- response (404 Not Found)
+```json
+{
+  "msg": "no community found"
+}
+```
+- response (401 Unauthorized)
+    - jwtがない
+```json
+{
+  "msg": "need auth."
+}
+```
+- response (403 Forbidden)
+    - アクセス権がない（参加していない）
+```json
+{
+  "msg": "forbidden."
+}
+```
 ### 店検索 `[GET] /gplace`
 - google search apiのラッパー
 ```json
