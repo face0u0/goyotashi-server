@@ -17,7 +17,7 @@ $ psql -h localhost -p 5432 -U postgres -d goyotashi
 $ cargo run
 ```
 
-## seeds
+## Seeds
 ```
  INSERT INTO users (uid) values ('3829-8392-jdij-3728');
  INSERT INTO communities (name, description, public ) values ('パレット', '生協です', true);
@@ -50,4 +50,197 @@ $ cargo run
 ### review
 - pinとmember/userの中間テーブル(どっちにするか迷ってる)
 
-## 
+## Endpoint
+### コミュニティの飯屋`[GET] /communities/{id}/pins`
+- request 
+```
+ no body
+```
+- response (200 OK)
+    - 成功時
+```json
+[
+  {
+    "id": 611,
+    "restaurant_id": 181,
+    "community_id": 116
+  }
+]
+```
+- response (404 Not Found)
+    - idが無効
+```json
+{
+  "msg": "resource not found."
+}
+```
+
+### コミュニティ情報 `[GET] /communities/{id}`
+- request
+```
+ no body
+```
+- response (200 OK)
+    - 成功時
+```json
+{
+  "id": 2819,
+  "name": "パレット",
+  "description": "生協のサークル",
+  "public": true
+}
+```
+- response (404 Not Found)
+    - idが無効
+```json
+{
+  "msg": "resource not found."
+}
+```
+- response (401 Unauthorized)
+    - private_communityにアクセスしたが、jwtがない
+```json
+{
+  "msg": "this resource need token."
+}
+```
+- response (403 Forbidden)
+    - private_communityにアクセスしたが、アクセス権がない
+```json
+{
+  "msg": "forbidden."
+}
+```
+
+### コミュニティ検索 `[GET] /communities`
+- request
+```json
+{
+  "search": "パレット"
+}
+```
+- response (200 OK)
+    - 成功時
+```json
+[
+    {
+      "id": 2819,
+      "name": "パレット",
+      "description": "生協のサークル",
+      "public": true
+    } 
+]
+```
+- response (400 Bad Request)
+    - searchを指定してない
+```json
+{
+  "msg": "no search query."
+}
+```
+
+
+### コミュニティ追加 `[POST] /communities`
+- request
+```json
+{
+    "description":  "ギターをするサークル",
+    "name":  "ギター部",
+    "public": true
+}
+```
+- response (200 OK)
+    - 成功時
+```
+no body
+```
+- response (400 Bad Request)
+    - requestが不正
+```json
+{
+  "msg": "invalid"
+}
+```
+
+### コミュニティアップデート `[PUT] /communities/{id}`
+- request
+    - 必要なものだけ入れればおけ
+```json
+{
+	"name":  "やんパオ",
+	"description":  "弁当製造業者です",
+	"public": true
+}
+```
+- response (200 OK)
+    - 成功時
+```
+no body
+```
+- response (401 Unauthorized)
+    - jwtがない
+```json
+{
+  "msg": "need auth."
+}
+```
+- response (403 Forbidden)
+    - アクセス権がない（参加していない）
+```json
+{
+  "msg": "forbidden."
+}
+```
+### コミュニティ参加 `[POST] /members`
+- request
+```json
+{
+	"community_id": 12
+}
+```
+- response (200 OK)
+    - 成功時
+```
+no body
+```
+- response (401 Unauthorized)
+    - jwtがない
+```json
+{
+  "msg": "need auth."
+}
+```
+### 店追加 `[POST] /pins`
+```json
+{
+	"place_id": 391021,
+	"community_id": 19201
+}
+```
+```
+no body
+```
+
+### 店検索 `[GET] /gplace`
+- google search apiのラッパー
+```json
+{
+	"search": "やんパオ"
+}
+```
+```
+[
+	{{restaurant_list}}
+]
+
+```
+
+### 店情報 `[GET] /gplace/{id}`
+- google detail apiのラッパー
+```
+no body
+```
+```
+{{restaurant}}
+```
+
