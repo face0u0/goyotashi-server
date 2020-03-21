@@ -18,9 +18,9 @@ fn index() -> &'static str {
 }
 
 #[get("/communities?<search>")]
-fn search_community(search: Option<String>) -> Json<Vec<Community>> {
+fn community_search(search: Option<String>) -> Json<Vec<Community>> {
     return match search {
-        Some(s) => Json(services::community::get_community(&s)),
+        Some(s) => Json(services::community::search_community(&s)),
         None => panic!()
     }
 }
@@ -34,18 +34,23 @@ fn community_detail(_id: Option<u32>) -> Json<Community> {
 }
 
 #[derive(Serialize, Deserialize)]
-struct CreateCommunity {
+struct PostCommunity {
     pub name: String,
     pub description: String,
     pub public: bool,
 }
 #[post("/communities", data = "<community>")]
-fn community_create(community: Json<CreateCommunity>) -> Json<Community> {
+fn community_create(community: Json<PostCommunity>) -> Json<Community> {
     Json(services::community::create_community(&community.name, &community.description, community.public))
+}
+
+#[put("/communities/<_id>", data = "<community>")]
+fn community_update(_id: u32, community: Json<PostCommunity>) -> Json<Community> {
+    Json(services::community::update_community(_id, &community.name, &community.description, community.public))
 }
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![index, search_community, community_detail, community_create])  // ここにルーティングをセットする
+        .mount("/", routes![index, community_search, community_detail, community_create, community_update])  // ここにルーティングをセットする
         .launch();
 }
