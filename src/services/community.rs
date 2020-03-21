@@ -15,9 +15,18 @@ pub fn get_community(_: &str) -> Vec<Community> {
 
 pub fn find_community(_id: u32) -> Community {
     return Community {
-        id: 8198,
+        id: _id,
         name: "PALLET".to_string(),
         description: "GOYOTASHI FIRST".to_string(),
         public: true
+    }
+}
+
+pub fn create_community(name: &str, description: &str, public: bool) -> Community {
+    return Community{
+        id: 0,
+        name: name.to_string(),
+        description: description.to_string(),
+        public
     }
 }

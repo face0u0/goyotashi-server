@@ -4,8 +4,9 @@
 #[macro_use]
 extern crate rocket;
 
+use serde::{Deserialize, Serialize};
 use rocket_contrib::json::Json;
-use crate::models::Community;
+use crate::models::{Community};
 
 mod controllers;
 mod models;
@@ -32,8 +33,19 @@ fn community_detail(_id: Option<u32>) -> Json<Community> {
     }
 }
 
+#[derive(Serialize, Deserialize)]
+struct CreateCommunity {
+    pub name: String,
+    pub description: String,
+    pub public: bool,
+}
+#[post("/communities", data = "<community>")]
+fn community_create(community: Json<CreateCommunity>) -> Json<Community> {
+    Json(services::community::create_community(&community.name, &community.description, community.public))
+}
+
 fn main() {
     rocket::ignite()
-        .mount("/", routes![index, search_community, community_detail])  // ここにルーティングをセットする
+        .mount("/", routes![index, search_community, community_detail, community_create])  // ここにルーティングをセットする
         .launch();
 }
