@@ -1,18 +1,21 @@
 use crate::models::{Community, NoIdCommunity};
 use crate::mapper::get_client;
 
-pub fn find(_id: i32) -> Result<Community, &'static str> {
-    let mut community = Err("no community");
-    for row in get_client().query(
-        "SELECT id, name, description, public FROM communities WHERE id = $1", &[&_id]).unwrap() {
-        community = Ok(Community {
-            id: row.get(0),
-            name: row.get(1),
-            description: row.get(2),
-            public: row.get(3)
-        });
-    }
-    return community;
+pub fn find(_id: i32) -> Result<Community, String> {
+    get_client().query(
+        "SELECT id, name, description, public FROM communities WHERE id = $1",
+        &[&_id]
+    )
+        .map_err(|err| err.to_string())
+        .map(|rows| {
+            let row = rows.last().unwrap();
+            Community {
+                id: row.get(0),
+                name: row.get(1),
+                description: row.get(2),
+                public: row.get(3)
+            }
+        })
 }
 
 pub fn create(community: &NoIdCommunity) -> Result<Community, &'static str> {
