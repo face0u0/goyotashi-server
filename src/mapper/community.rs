@@ -1,12 +1,5 @@
-extern crate postgres;
-
-use postgres::{Client, NoTls};
 use crate::models::{Community, NoIdCommunity};
-
-pub fn get_client() -> Client {
-    let client = Client::connect("postgresql://postgres:root@localhost/goyotashi", NoTls).unwrap();
-    return client;
-}
+use crate::mapper::get_client;
 
 pub fn find(_id: i32) -> Result<Community, &'static str> {
     let mut community = Err("no community");
