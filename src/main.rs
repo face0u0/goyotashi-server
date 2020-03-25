@@ -12,6 +12,6 @@ mod services;
 
 fn main() {
     rocket::ignite()
-        .mount("/", controllers::community::router())
+        .mount("/communities", controllers::community::router())
         .launch();
 }

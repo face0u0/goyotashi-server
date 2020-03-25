@@ -6,12 +6,7 @@ use crate::{
     services
 };
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
-#[get("/communities?<search>")]
+#[get("/?<search>")]
 fn community_search(search: Option<String>) -> Json<Vec<Community>> {
     return match search {
         Some(s) => Json(services::community::search_community(&s)),
@@ -19,7 +14,7 @@ fn community_search(search: Option<String>) -> Json<Vec<Community>> {
     }
 }
 
-#[get("/communities/<_id>")]
+#[get("/<_id>")]
 fn community_detail(_id: Option<i32>) -> Json<Community> {
     return match _id {
         Some(i) => Json(services::community::find_community(i)),
@@ -27,7 +22,7 @@ fn community_detail(_id: Option<i32>) -> Json<Community> {
     }
 }
 
-#[post("/communities", data = "<community>")]
+#[post("/", data = "<community>")]
 fn community_create(community: Json<NoIdCommunity>) -> Json<Community> {
     Json(services::community::create_community(NoIdCommunity {
         name: community.name.to_string(),
@@ -36,7 +31,7 @@ fn community_create(community: Json<NoIdCommunity>) -> Json<Community> {
     }))
 }
 
-#[put("/communities/<_id>", data = "<community>")]
+#[put("/<_id>", data = "<community>")]
 fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community> {
     Json(services::community::update_community(Community{
         id: _id,
@@ -47,5 +42,5 @@ fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community>
 }
 
 pub fn router() -> Vec<Route>{
-    return routes![index, community_search, community_detail, community_create, community_update];
+    return routes![community_search, community_detail, community_create, community_update];
 }
