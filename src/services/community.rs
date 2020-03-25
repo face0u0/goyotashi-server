@@ -1,6 +1,8 @@
 use crate::{
-    models::{Community}
+    models::{Community},
+    mapper::{community}
 };
+use crate::models::NoIdCommunity;
 
 pub fn search_community(_: &str) -> Vec<Community> {
     return vec![
@@ -13,29 +15,14 @@ pub fn search_community(_: &str) -> Vec<Community> {
     ]
 }
 
-pub fn find_community(_id: u32) -> Community {
-    return Community {
-        id: _id,
-        name: "PALLET".to_string(),
-        description: "GOYOTASHI FIRST".to_string(),
-        public: true
-    }
+pub fn find_community(_id: i32) -> Community {
+    return community::select_community(_id).unwrap()
 }
 
-pub fn create_community(name: &str, description: &str, public: bool) -> Community {
-    return Community{
-        id: 0,
-        name: name.to_string(),
-        description: description.to_string(),
-        public
-    }
+pub fn create_community(no_id_community: NoIdCommunity) -> Community {
+    return community::insert_community(&no_id_community).unwrap()
 }
 
-pub fn update_community(_id: u32, name: &str, description: &str, public: bool) -> Community {
-    return Community{
-        id: _id,
-        name: name.to_string(),
-        description: description.to_string(),
-        public
-    }
+pub fn update_community(new_community: Community) -> Community {
+    return community::update_community(&new_community).unwrap();
 }

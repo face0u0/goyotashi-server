@@ -4,12 +4,12 @@
 #[macro_use]
 extern crate rocket;
 
-use serde::{Deserialize, Serialize};
 use rocket_contrib::json::Json;
-use crate::models::{Community};
+use crate::models::{Community, NoIdCommunity};
 
 mod controllers;
 mod models;
+mod mapper;
 mod services;
 
 #[get("/")]
@@ -26,27 +26,30 @@ fn community_search(search: Option<String>) -> Json<Vec<Community>> {
 }
 
 #[get("/communities/<_id>")]
-fn community_detail(_id: Option<u32>) -> Json<Community> {
+fn community_detail(_id: Option<i32>) -> Json<Community> {
     return match _id {
         Some(i) => Json(services::community::find_community(i)),
         None => panic!()
     }
 }
 
-#[derive(Serialize, Deserialize)]
-struct PostCommunity {
-    pub name: String,
-    pub description: String,
-    pub public: bool,
-}
 #[post("/communities", data = "<community>")]
-fn community_create(community: Json<PostCommunity>) -> Json<Community> {
-    Json(services::community::create_community(&community.name, &community.description, community.public))
+fn community_create(community: Json<NoIdCommunity>) -> Json<Community> {
+    Json(services::community::create_community(NoIdCommunity {
+        name: community.name.to_string(),
+        description: community.description.to_string(),
+        public: community.public
+    }))
 }
 
 #[put("/communities/<_id>", data = "<community>")]
-fn community_update(_id: u32, community: Json<PostCommunity>) -> Json<Community> {
-    Json(services::community::update_community(_id, &community.name, &community.description, community.public))
+fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community> {
+    Json(services::community::update_community(Community{
+        id: _id,
+        name: community.name.to_string(),
+        description: community.description.to_string(),
+        public: community.public
+    }))
 }
 
 fn main() {
