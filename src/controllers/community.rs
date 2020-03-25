@@ -16,7 +16,7 @@ fn community_search(search: Option<String>) -> Json<Vec<Community>> {
 #[get("/<_id>")]
 fn community_detail(_id: Option<i32>) -> Json<Community> {
     return match _id {
-        Some(i) => Json(services::community::find(i)),
+        Some(i) => Json(services::community::find(i).unwrap()),
         None => panic!()
     }
 }
@@ -27,7 +27,7 @@ fn community_create(community: Json<NoIdCommunity>) -> Json<Community> {
         name: community.name.to_string(),
         description: community.description.to_string(),
         public: community.public
-    }))
+    }).unwrap())
 }
 
 #[put("/<_id>", data = "<community>")]
@@ -37,7 +37,7 @@ fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community>
         name: community.name.to_string(),
         description: community.description.to_string(),
         public: community.public
-    }))
+    }).unwrap())
 }
 
 pub fn router() -> Vec<Route>{

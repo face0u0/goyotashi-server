@@ -15,14 +15,14 @@ pub fn search_community(_: &str) -> Vec<Community> {
     ]
 }
 
-pub fn find(_id: i32) -> Community {
-    return community::find(_id).unwrap()
+pub fn find(_id: i32) -> Result<Community, String> {
+    community::find(_id)
 }
 
-pub fn create(no_id_community: NoIdCommunity) -> Community {
-    return community::create(&no_id_community).unwrap()
+pub fn create(no_id_community: NoIdCommunity) -> Result<Community, String> {
+    community::create(&no_id_community)
 }
 
-pub fn update(new_community: Community) -> Community {
-    return community::update(&new_community).unwrap();
+pub fn update(new_community: Community) -> Result<Community, String> {
+    community::update(&new_community)
 }
