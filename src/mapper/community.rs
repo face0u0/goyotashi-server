@@ -17,7 +17,7 @@ pub fn create(community: &NoIdCommunity) -> Result<Community, ErrCode> {
         "INSERT INTO communities ( name, description, public ) VALUES ( $1, $2, $3 ) RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public]
     )
-        .map_err( |_| ErrCode::new_db_err())
+        .map_err(|_| ErrCode::new_db_err())
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 
@@ -26,7 +26,7 @@ pub fn update(community: &Community) -> Result<Community, ErrCode> {
         "UPDATE communities SET name = $1, description = $2, public = $3 WHERE id = $4 RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public, &community.id]
     )
-        .map_err( |_| ErrCode::new_db_err())
+        .map_err(|_| ErrCode::new_db_err())
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 

@@ -17,13 +17,12 @@ impl ErrCode {
     }
 
     pub fn new_db_err() -> ErrCode {
-        ErrCode {status: Stat::UnprocessableEntity, msg: "internal db err.".to_owned()}
+        ErrCode {status: Stat::UnprocessableEntity, msg: "Internal db err.".to_owned()}
     }
 
     pub fn render(&self) -> Custom<Json<ResponseErr>> {
         Custom(self.status.convert(), Json(ResponseErr{msg: self.msg.to_owned()}))
     }
-
 }
 
 #[allow(dead_code)]

@@ -5,15 +5,15 @@ use crate::{
 };
 use crate::models::NoIdCommunity;
 
-pub fn search_by_name(_: &str) -> Vec<Community> {
-    return vec![
+pub fn search_by_name(_: String) -> Result<Vec<Community>, ErrCode> {
+    return Ok(vec![
         Community {
             id: 8198,
             name: "PALLET".to_string(),
             description: "GOYOTASHI FIRST".to_string(),
             public: true
         }
-    ]
+    ])
 }
 
 pub fn find(_id: i32) -> Result<Community, ErrCode> {

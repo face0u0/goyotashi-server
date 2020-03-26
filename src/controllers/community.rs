@@ -12,11 +12,12 @@ use crate::{
 };
 
 #[get("/?<search>")]
-fn search(search: Option<String>) -> Json<Vec<Community>> {
-    return match search {
-        Some(s) => Json(services::community::search_by_name(&s)),
-        None => panic!()
-    }
+fn search(search: Option<String>) -> Result<Json<Vec<Community>>, Custom<Json<ResponseErr>>> {
+    search
+        .ok_or(ErrCode::new(Stat::BadRequest, "Query 'search' not found."))
+        .and_then(|search| services::community::search_by_name(search))
+        .map_err(|err| err.render())
+        .map(|com_v| Json(com_v))
 }
 
 #[get("/<_id>")]
