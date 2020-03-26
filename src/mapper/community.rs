@@ -8,10 +8,7 @@ pub fn find(_id: i32) -> Result<Community, String> {
         &[&_id]
     )
         .map_err(|err| err.to_string())
-        .map(|rows| {
-            let row = rows.last().unwrap();
-            row_to_community(row)
-        })
+        .and_then(|rows| extract_one_community(&rows, "no community found."))
 }
 
 pub fn create(community: &NoIdCommunity) -> Result<Community, String> {
@@ -20,10 +17,7 @@ pub fn create(community: &NoIdCommunity) -> Result<Community, String> {
         &[&community.name, &community.description, &community.public]
     )
         .map_err(|err| err.to_string())
-        .map(|rows|{
-            let row = rows.last().unwrap();
-            row_to_community(row)
-        })
+        .and_then(|rows| extract_one_community(&rows, "community cannot created."))
 }
 
 pub fn update(community: &Community) -> Result<Community, String> {
@@ -32,10 +26,13 @@ pub fn update(community: &Community) -> Result<Community, String> {
         &[&community.name, &community.description, &community.public, &community.id]
     )
         .map_err(|err| err.to_string())
-        .map(|rows| {
-            let row = rows.last().unwrap();
-            row_to_community(row)
-        })
+        .and_then(|rows| extract_one_community(&rows, "community cannot updated."))
+}
+
+fn extract_one_community(rows: &Vec<Row>, err: &'static str) -> Result<Community, String>{
+    rows.last()
+        .ok_or(err.to_string())
+        .map(|row| row_to_community(row))
 }
 
 fn row_to_community(row: &Row) -> Community {

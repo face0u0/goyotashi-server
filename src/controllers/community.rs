@@ -1,37 +1,48 @@
-use rocket::{Route};
+use rocket::{
+    Route,
+    response::{
+        status::Custom
+    },
+    http::{
+        Status
+    }
+};
 use rocket_contrib::json::Json;
 use crate::{
-    models::{Community, NoIdCommunity},
+    models::{Community, NoIdCommunity, ResponseErr},
     services
 };
 
 #[get("/?<search>")]
-fn community_search(search: Option<String>) -> Json<Vec<Community>> {
+fn search(search: Option<String>) -> Json<Vec<Community>> {
     return match search {
-        Some(s) => Json(services::community::search_community(&s)),
+        Some(s) => Json(services::community::search_by_name(&s)),
         None => panic!()
     }
 }
 
 #[get("/<_id>")]
-fn community_detail(_id: Option<i32>) -> Json<Community> {
-    return match _id {
-        Some(i) => Json(services::community::find(i).unwrap()),
-        None => panic!()
-    }
+fn detail(_id: Option<i32>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
+    _id
+        .ok_or("ID is invalid".to_string())
+        .and_then( |community_id| services::community::find(community_id))
+        .map_err(|err| Custom(Status::NotFound, Json(ResponseErr {msg: err.to_string()})))
+        .map(|com| Json(com))
 }
 
 #[post("/", data = "<community>")]
-fn community_create(community: Json<NoIdCommunity>) -> Json<Community> {
-    Json(services::community::create(NoIdCommunity {
+fn create(community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
+    services::community::create(NoIdCommunity {
         name: community.name.to_string(),
         description: community.description.to_string(),
         public: community.public
-    }).unwrap())
+    })
+        .map_err(|err| Custom(Status::NotFound, Json(ResponseErr {msg: err.to_string()})))
+        .map(|com| Json(com))
 }
 
 #[put("/<_id>", data = "<community>")]
-fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community> {
+fn update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community> {
     Json(services::community::update(Community{
         id: _id,
         name: community.name.to_string(),
@@ -41,5 +52,5 @@ fn community_update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community>
 }
 
 pub fn router() -> Vec<Route>{
-    return routes![community_search, community_detail, community_create, community_update];
+    return routes![search, detail, create, update];
 }

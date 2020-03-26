@@ -4,7 +4,7 @@ use crate::{
 };
 use crate::models::NoIdCommunity;
 
-pub fn search_community(_: &str) -> Vec<Community> {
+pub fn search_by_name(_: &str) -> Vec<Community> {
     return vec![
         Community {
             id: 8198,

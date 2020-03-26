@@ -8,6 +8,7 @@ mod controllers;
 mod models;
 mod mapper;
 mod services;
+mod errors;
 
 
 fn main() {
