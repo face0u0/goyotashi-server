@@ -14,5 +14,6 @@ mod errors;
 fn main() {
     rocket::ignite()
         .mount("/communities", controllers::community::router())
+        .register(controllers::err::router())
         .launch();
 }

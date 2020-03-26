@@ -1,37 +1,38 @@
 use crate::models::{Community, NoIdCommunity};
 use crate::mapper::get_client;
+use crate::errors::*;
 use postgres::Row;
 
-pub fn find(_id: i32) -> Result<Community, String> {
+pub fn find(_id: i32) -> Result<Community, ErrCode> {
     get_client().query(
         "SELECT id, name, description, public FROM communities WHERE id = $1",
         &[&_id]
     )
-        .map_err(|err| err.to_string())
-        .and_then(|rows| extract_one_community(&rows, "no community found."))
+        .map_err(|_| ErrCode::new_db_err())
+        .and_then(|rows| extract_one_community(&rows, Stat::NotFound, "No community found."))
 }
 
-pub fn create(community: &NoIdCommunity) -> Result<Community, String> {
+pub fn create(community: &NoIdCommunity) -> Result<Community, ErrCode> {
     get_client().query(
         "INSERT INTO communities ( name, description, public ) VALUES ( $1, $2, $3 ) RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public]
     )
-        .map_err(|err| err.to_string())
-        .and_then(|rows| extract_one_community(&rows, "community cannot created."))
+        .map_err( |_| ErrCode::new_db_err())
+        .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 
-pub fn update(community: &Community) -> Result<Community, String> {
+pub fn update(community: &Community) -> Result<Community, ErrCode> {
     get_client().query(
         "UPDATE communities SET name = $1, description = $2, public = $3 WHERE id = $4 RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public, &community.id]
     )
-        .map_err(|err| err.to_string())
-        .and_then(|rows| extract_one_community(&rows, "community cannot updated."))
+        .map_err( |_| ErrCode::new_db_err())
+        .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 
-fn extract_one_community(rows: &Vec<Row>, err: &'static str) -> Result<Community, String>{
+fn extract_one_community(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<Community, ErrCode>{
     rows.last()
-        .ok_or(err.to_string())
+        .ok_or(ErrCode::new(stat, err))
         .map(|row| row_to_community(row))
 }
 

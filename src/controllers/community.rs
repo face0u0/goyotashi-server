@@ -2,15 +2,13 @@ use rocket::{
     Route,
     response::{
         status::Custom
-    },
-    http::{
-        Status
     }
 };
 use rocket_contrib::json::Json;
 use crate::{
     models::{Community, NoIdCommunity, ResponseErr},
-    services
+    services,
+    errors::*,
 };
 
 #[get("/?<search>")]
@@ -24,9 +22,9 @@ fn search(search: Option<String>) -> Json<Vec<Community>> {
 #[get("/<_id>")]
 fn detail(_id: Option<i32>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
     _id
-        .ok_or("ID is invalid".to_string())
+        .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
         .and_then( |community_id| services::community::find(community_id))
-        .map_err(|err| Custom(Status::NotFound, Json(ResponseErr {msg: err.to_string()})))
+        .map_err(|err| err.render())
         .map(|com| Json(com))
 }
 
@@ -37,18 +35,20 @@ fn create(community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json
         description: community.description.to_string(),
         public: community.public
     })
-        .map_err(|err| Custom(Status::NotFound, Json(ResponseErr {msg: err.to_string()})))
+        .map_err(|err| err.render())
         .map(|com| Json(com))
 }
 
 #[put("/<_id>", data = "<community>")]
-fn update(_id: i32, community: Json<NoIdCommunity>) -> Json<Community> {
-    Json(services::community::update(Community{
+fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
+    services::community::update(Community{
         id: _id,
         name: community.name.to_string(),
         description: community.description.to_string(),
         public: community.public
-    }).unwrap())
+    })
+        .map_err(|err| err.render())
+        .map(|com| Json(com))
 }
 
 pub fn router() -> Vec<Route>{
