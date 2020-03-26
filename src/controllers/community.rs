@@ -31,23 +31,14 @@ fn detail(_id: Option<i32>) -> Result<Json<Community>, Custom<Json<ResponseErr>>
 
 #[post("/", data = "<community>")]
 fn create(community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
-    services::community::create(NoIdCommunity {
-        name: community.name.to_string(),
-        description: community.description.to_string(),
-        public: community.public
-    })
+    services::community::create(community.into_inner())
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
 
 #[put("/<_id>", data = "<community>")]
 fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
-    services::community::update(Community{
-        id: _id,
-        name: community.name.to_string(),
-        description: community.description.to_string(),
-        public: community.public
-    })
+    services::community::update(_id, community.into_inner())
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }

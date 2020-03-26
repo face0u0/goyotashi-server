@@ -17,6 +17,6 @@ pub fn create(no_id_community: NoIdCommunity) -> Result<Community, ErrCode> {
     mapper::community::create(&no_id_community)
 }
 
-pub fn update(new_community: Community) -> Result<Community, ErrCode> {
-    mapper::community::update(&new_community)
+pub fn update(_id: i32, new_community_data: NoIdCommunity) -> Result<Community, ErrCode> {
+    mapper::community::update(_id, &new_community_data)
 }

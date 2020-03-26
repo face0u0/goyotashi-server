@@ -36,10 +36,10 @@ pub fn create(community: &NoIdCommunity) -> Result<Community, ErrCode> {
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 
-pub fn update(community: &Community) -> Result<Community, ErrCode> {
+pub fn update(_id: i32, community: &NoIdCommunity) -> Result<Community, ErrCode> {
     get_client().query(
         "UPDATE communities SET name = $1, description = $2, public = $3 WHERE id = $4 RETURNING id, name, description, public",
-        &[&community.name, &community.description, &community.public, &community.id]
+        &[&community.name, &community.description, &community.public, &_id]
     )
         .map_err(|_| ErrCode::new_db_err())
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
