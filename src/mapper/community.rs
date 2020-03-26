@@ -3,6 +3,21 @@ use crate::mapper::get_client;
 use crate::errors::*;
 use postgres::Row;
 
+pub fn find_all_by_name(name: String) -> Result<Vec<Community>, ErrCode> {
+    get_client().query(
+        "SELECT id, name, description, public FROM communities WHERE name LIKE $1 AND public = TRUE",
+        &[&name]
+    )
+        .map_err(|_| ErrCode::new_db_err())
+        .map(|rows| {
+            let mut com_v: Vec<Community> = vec![];
+            for row in &rows{
+                com_v.push(row_to_community(row))
+            }
+            com_v
+        })
+}
+
 pub fn find(_id: i32) -> Result<Community, ErrCode> {
     get_client().query(
         "SELECT id, name, description, public FROM communities WHERE id = $1",
