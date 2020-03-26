@@ -1,5 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
+pub struct ResponseErr {
+    pub msg: String
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Community {
     pub id: i32,
