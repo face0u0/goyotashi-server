@@ -9,7 +9,11 @@
     - [create](endpoint/community/create.md)
     - [update](endpoint/community/update.md)
 - user
+    - [show](endpoint/user/show.md)
 - member
-- user
+    - [join](endpoint/member/create.md)
+- gplace
+    - [search](endpoint/gplace/search.md)
+- restaurant
 - pin
 - review

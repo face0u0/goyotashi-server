@@ -1,4 +1,4 @@
-# コミュニティアップデート `[PUT] /communities/{id}`
+# コミュニティ更新 `[PUT] /communities/{id}`
 `AUTH`
 
 ## request
