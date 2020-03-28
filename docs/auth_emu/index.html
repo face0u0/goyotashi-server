@@ -2,12 +2,44 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>sample</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <title>Firebase auth</title>
 </head>
 <body>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyCKAryaaVb9DRyowzcqc3kgyE4Qu0pBEtE",
+            authDomain: "goyoutashi-32b27.firebaseapp.com",
+            databaseURL: "https://goyoutashi-32b27.firebaseio.com",
+            projectId: "goyoutashi-32b27",
+            storageBucket: "goyoutashi-32b27.appspot.com",
+            messagingSenderId: "1039358997151",
+            appId: "1:1039358997151:web:34d3f3af8465a3faa4e8aa",
+            measurementId: "G-HC5TGF4RX7"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function trysign(){
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then(user => {
+                    console.log(user);
+                    firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+                        console.log(idToken)
+                    })
+                })
+                .catch(function(error) {
+                        console.log(error);
+                    }
+                );
+
+        }
+    </script>
 
     <h1 style="margin: 0 auto">Firebase Auth Sample</h1>
+    <button onclick="trysign()">LOGIN</button>
 </div>
 </body>
 </html>
