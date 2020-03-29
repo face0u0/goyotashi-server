@@ -13,6 +13,7 @@ none
 ```json
 {
   "id": 3,
-  "name": "Taro"
+  "name": "Taro",
+  "email": "taro@api.goyotashi.com"
 }
 ```

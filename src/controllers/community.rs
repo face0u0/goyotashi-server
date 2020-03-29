@@ -6,8 +6,9 @@ use rocket::{
 };
 use rocket_contrib::json::Json;
 use crate::{
-    models::{Community, NoIdCommunity, ResponseErr},
+    models::{Community, NoIdCommunity, ResponseErr, Member},
     services,
+    logic,
     errors::*,
 };
 
@@ -43,6 +44,15 @@ fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, C
         .map(|com| Json(com))
 }
 
+#[post("/<_id>/members")]
+fn join(_id: Option<i32>) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+    _id
+        .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
+        .and_then( |community_id| services::member::join(logic::authorize::sample_jwt(), community_id))
+        .map_err(|err| err.render())
+        .map(|com| Json(com))
+}
+
 pub fn router() -> Vec<Route>{
-    return routes![search, detail, create, update];
+    return routes![search, detail, create, update, join];
 }

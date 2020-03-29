@@ -1,12 +1,10 @@
-# コミュニティへの参加 `[POST] /members`
+# コミュニティへの参加 `[POST] /communities/{id}/members`
 `AUTH`
 
 ## Request
 
-```json
-{
-  "community_id": 2
-}
+```
+none
 ```
 
 ## Response

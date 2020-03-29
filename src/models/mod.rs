@@ -41,3 +41,16 @@ pub struct ShowUser {
     pub email: String,
     pub name: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Member{
+    pub id: i32,
+    pub user_id: i32,
+    pub community_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct NoIdMember{
+    pub user_id: i32,
+    pub community_id: i32,
+}
