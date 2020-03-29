@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL NOT NULL,
     uid VARCHAR(255) NOT NULL,
-    name VARCHAR(255),
-    icon TEXT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
@@ -13,7 +13,7 @@ CREATE INDEX ON users (uid);
 CREATE TABLE IF NOT EXISTS communities (
     id SERIAL NOT NULL,
     name VARCHAR(255) NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
     public BOOLEAN DEFAULT TRUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,

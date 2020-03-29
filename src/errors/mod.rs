@@ -7,7 +7,7 @@ use rocket_contrib::json::Json;
 use crate::models::ResponseErr;
 
 pub struct ErrCode{
-    status: Stat,
+    pub status: Stat,
     msg: String
 }
 

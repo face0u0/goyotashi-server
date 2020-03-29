@@ -9,11 +9,12 @@ mod models;
 mod mapper;
 mod services;
 mod errors;
-
+mod logic;
 
 fn main() {
     rocket::ignite()
         .mount("/communities", controllers::community::router())
+        .mount("/users", controllers::user::router())
         .register(controllers::err::router())
         .launch();
 }
