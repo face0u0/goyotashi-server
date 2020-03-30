@@ -1,10 +1,6 @@
-use rocket::{
-    Route,
-    response::{
-        status::Custom
-    },
-    http
-};
+use rocket::{Route, response::{
+    status::Custom
+}, http, Request};
 use rocket_contrib::json::Json;
 use crate::{
     models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, NoIdPin, ShowUser},
@@ -12,6 +8,7 @@ use crate::{
     logic,
     errors::*,
 };
+use rocket::request::{FromRequest, Outcome};
 
 #[get("/?<search>")]
 fn search(search: Option<String>) -> Result<Json<Vec<Community>>, Custom<Json<ResponseErr>>> {
@@ -45,11 +42,26 @@ fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, C
         .map(|com| Json(com))
 }
 
+struct Jwt(pub String);
+
+impl<'a, 'r> FromRequest<'a, 'r> for Jwt {
+    type Error = ();
+
+    fn from_request(request: &'a Request<'r>) -> Outcome<Jwt, Self::Error> {
+        let keys: Vec<_> = request.headers().get("Authentication").collect();
+        if keys.len() != 1 {
+            return Outcome::Forward(());
+        }
+        Outcome::Success(Jwt(keys[0].to_string()))
+    }
+}
+
 #[post("/<_id>/users")]
-fn join(_id: Option<i32>) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+fn join(_id: Option<i32>, jwt: Jwt) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+    dbg!(&jwt.0);
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
-        .and_then( |community_id| services::member::join(logic::authorize::sample_jwt(), community_id))
+        .and_then( |community_id| services::member::join(jwt.0, community_id))
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
