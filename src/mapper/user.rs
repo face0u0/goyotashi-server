@@ -30,13 +30,32 @@ pub fn create(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
         .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid User Object."))
 }
 
+pub fn find_all_included_by(community_id: &i32) -> Result<Vec<User>, ErrCode> {
+    get_client().query(
+        "SELECT u.id, u.uid, u.name, u.email FROM members LEFT JOIN users u on members.user_id = u.id WHERE members.community_id = $1",
+        &[&community_id]
+    )
+        .map_err(|_| ErrCode::new_db_err())
+        .map(|rows| {
+            let mut res_v: Vec<User> = vec![];
+            for row in &rows{
+                res_v.push(row_to_user(row))
+            }
+            res_v
+        })
+}
+
 fn extract_one(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<User, ErrCode>{
     rows.last()
         .ok_or(ErrCode::new(stat, err))
-        .map(|row| User {
-            id: row.get(0),
-            uid: row.get(1),
-            name: row.get(2),
-            email: row.get(3)
-        })
+        .map(|row| row_to_user(row))
+}
+
+fn row_to_user(row: &Row) -> User {
+    User {
+        id: row.get(0),
+        uid: row.get(1),
+        name: row.get(2),
+        email: row.get(3)
+    }
 }
