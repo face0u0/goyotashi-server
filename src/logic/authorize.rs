@@ -8,24 +8,11 @@ use serde::{Deserialize, Serialize};
 
 pub fn auth(jwt: &String) -> Result<User, ErrCode>{
     let claims = extract_uid(jwt.to_owned())?;
-    let user_err = mapper::user::find_by_uid(&claims.sub);
-    return match user_err {
-        Ok(_) => user_err,
-        Err(err) => {
-            match err.status {
-                Stat::NotFound => {
-                    let new_user = NoIdUser {
-                        name: claims.name,
-                        email: claims.email,
-                        uid: claims.sub
-                    };
-                    let created = mapper::user::create(&new_user);
-                    created
-                },
-                _ => Err(err)
-            }
-        }
-    }
+    mapper::user::insert_or_update(&NoIdUser{
+        name: claims.name,
+        email: claims.email,
+        uid: claims.sub
+    })
 }
 
 

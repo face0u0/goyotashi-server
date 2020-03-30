@@ -12,6 +12,7 @@ pub fn find(_id: &i32) -> Result<User, ErrCode> {
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
 }
 
+#[allow(dead_code)]
 pub fn find_by_uid(uid: &String) -> Result<User, ErrCode> {
     get_client().query(
         "SELECT id, uid, name, email FROM users WHERE uid = $1",
@@ -21,14 +22,18 @@ pub fn find_by_uid(uid: &String) -> Result<User, ErrCode> {
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
 }
 
-pub fn create(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
+pub fn insert_or_update(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
     get_client().query(
-        "INSERT INTO users ( name, uid, email ) VALUES ( $1, $2, $3 ) RETURNING id, uid, name, email",
-        &[&no_id_user.name, &no_id_user.uid, &no_id_user.email]
+        "INSERT INTO users ( name, uid, email ) VALUES ( $1, $2, $3 ) \
+        ON CONFLICT (uid) \
+        DO UPDATE SET name = $4, email = $5 \
+        RETURNING id, uid, name, email",
+        &[&no_id_user.name, &no_id_user.uid, &no_id_user.email, &no_id_user.name, &no_id_user.email]
     )
         .map_err(|err| ErrCode::new_db_err(&err))
-        .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid User Object."))
+        .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
 }
+
 
 pub fn find_all_included_by(community_id: &i32) -> Result<Vec<User>, ErrCode> {
     get_client().query(
