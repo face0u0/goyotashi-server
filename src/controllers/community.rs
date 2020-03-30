@@ -61,14 +61,14 @@ fn restaurant_index(_id: Option<i32>) -> Result<Json<Vec<Restaurant>>, Custom<Js
 }
 
 #[post("/<_id>/restaurants/<_rid>")]
-fn restaurant_add(_id: Option<i32>, _rid: Option<i32>) -> Result<http::Status, Custom<Json<ResponseErr>>> {
+fn restaurant_add(_id: Option<i32>, _rid: Option<i32>, head: Header) -> Result<http::Status, Custom<Json<ResponseErr>>> {
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "community ID is invalid."))
         .and_then( |community_id| {
             _rid
                 .ok_or(ErrCode::new(Stat::BadRequest, "restaurant id is invalid."))
                 .and_then(|restaurant_id| {
-                    services::restaurant::add(NoIdPin{restaurant_id, community_id})
+                    services::restaurant::add(head.user, NoIdPin{restaurant_id, community_id})
                 })
         })
         .map_err(|err| err.render())
