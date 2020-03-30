@@ -1,8 +1,6 @@
 - [Home](/)
 - [Install](install.md)
-
 ---
-
 - community
     - [search](endpoint/community/search.md)
     - [show](endpoint/community/show.md)
@@ -10,10 +8,11 @@
     - [update](endpoint/community/update.md)
 - user
     - [show](endpoint/user/show.md)
-- member
-    - [join](endpoint/member/create.md)
+    - [join](endpoint/user/create.md)
 - gplace
     - [search](endpoint/gplace/search.md)
 - restaurant
-- pin
+    - [index](endpoint/restaurant/index.md)
+    - [add](endpoint/restaurant/add.md)
+    - [show](endpoint/restaurant/show.md)
 - review

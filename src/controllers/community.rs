@@ -2,11 +2,12 @@ use rocket::{
     Route,
     response::{
         status::Custom
-    }
+    },
+    http
 };
 use rocket_contrib::json::Json;
 use crate::{
-    models::{Community, NoIdCommunity, ResponseErr, Member},
+    models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, NoIdPin},
     services,
     logic,
     errors::*,
@@ -44,7 +45,7 @@ fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, C
         .map(|com| Json(com))
 }
 
-#[post("/<_id>/members")]
+#[post("/<_id>/users")]
 fn join(_id: Option<i32>) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
@@ -53,6 +54,30 @@ fn join(_id: Option<i32>) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
         .map(|com| Json(com))
 }
 
+#[get("/<_id>/restaurants")]
+fn restaurant_index(_id: Option<i32>) -> Result<Json<Vec<Restaurant>>, Custom<Json<ResponseErr>>> {
+    _id
+        .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
+        .and_then( |community_id| services::restaurant::index_included_by(community_id))
+        .map_err(|err| err.render())
+        .map(|res| Json(res))
+}
+
+#[post("/<_id>/restaurants/<_rid>")]
+fn restaurant_add(_id: Option<i32>, _rid: Option<i32>) -> Result<http::Status, Custom<Json<ResponseErr>>> {
+    _id
+        .ok_or(ErrCode::new(Stat::BadRequest, "community ID is invalid."))
+        .and_then( |community_id| {
+            _rid
+                .ok_or(ErrCode::new(Stat::BadRequest, "restaurant id is invalid."))
+                .and_then(|restaurant_id| {
+                    services::restaurant::add(NoIdPin{restaurant_id, community_id})
+                })
+        })
+        .map_err(|err| err.render())
+        .map(|_| http::Status::Created)
+}
+
 pub fn router() -> Vec<Route>{
-    return routes![search, detail, create, update, join];
+    return routes![search, detail, create, update, join, restaurant_index, restaurant_add];
 }

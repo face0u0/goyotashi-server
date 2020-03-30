@@ -1,4 +1,4 @@
-# コミュニティへの参加 `[POST] /communities/{id}/members`
+# コミュニティへの参加 `[POST] /communities/{id}/users`
 `AUTH`
 
 ## Request

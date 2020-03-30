@@ -22,7 +22,7 @@ $ cargo run
  INSERT INTO restaurants (place_id, name, lat, lng) values ('36u16728', 'しばいけしょっぷ', 35.317971, 135.53157);
  INSERT INTO members (user_id, community_id) values (1,1);
  INSERT INTO pins (restaurant_id, community_id) values (1,1);
- INSERT INTO reviews (pin_id, member_id, rate, comment) values (1,1, 3, '良かった');
+ INSERT INTO reviews (pin_id, member_id, comment) values (1,1, '良かった');
 ```
 
 ## reset
