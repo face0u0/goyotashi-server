@@ -9,10 +9,10 @@
 - user
     - [show](endpoint/user/show.md)
     - [join](endpoint/user/create.md)
+    - [index](endpoint/user/index.md)
 - gplace
     - [search](endpoint/gplace/search.md)
 - restaurant
     - [index](endpoint/restaurant/index.md)
     - [add](endpoint/restaurant/add.md)
-    - [show](endpoint/restaurant/show.md)
 - review
