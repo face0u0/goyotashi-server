@@ -1,14 +1,15 @@
-use rocket::{Route, response::{
-    status::Custom
-}, http, Request};
+use rocket::{
+    Route,
+    response::{status::Custom},
+    http
+};
 use rocket_contrib::json::Json;
 use crate::{
     models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, NoIdPin, ShowUser},
     services,
-    logic,
+    controllers::Jwt,
     errors::*,
 };
-use rocket::request::{FromRequest, Outcome};
 
 #[get("/?<search>")]
 fn search(search: Option<String>) -> Result<Json<Vec<Community>>, Custom<Json<ResponseErr>>> {
@@ -42,33 +43,11 @@ fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, C
         .map(|com| Json(com))
 }
 
-pub struct AuthHeader{
-    pub method: String,
-    pub token: String
-}
-
-impl<'a, 'r> FromRequest<'a, 'r> for AuthHeader {
-    type Error = ();
-
-    fn from_request(request: &'a Request<'r>) -> Outcome<AuthHeader, Self::Error> {
-        let keys: Vec<_> = request.headers().get("Authorization").collect();
-        if keys.len() != 1 {
-            return Outcome::Failure((http::Status::Unauthorized, Self::Error::default()));
-        }
-        let keys: Vec<&str> = keys[0].split_whitespace().collect();
-        if keys.len() != 2 {
-            return Outcome::Failure((http::Status::Unauthorized, Self::Error::default()));
-        }
-        Outcome::Success(AuthHeader{method: keys[0].to_owned(), token: keys[1].to_owned()})
-    }
-}
-
 #[post("/<_id>/users")]
-fn join(_id: Option<i32>, jwt: AuthHeader) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
-    dbg!(&jwt.token);
+fn join(_id: Option<i32>, jwt: Jwt) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
-        .and_then( |community_id| services::member::join(jwt.token, community_id))
+        .and_then( |community_id| services::member::join(jwt, community_id))
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
