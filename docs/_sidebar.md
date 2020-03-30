@@ -1,6 +1,7 @@
 - [Home](/)
 - [Install](install.md)
 ---
+- [auth](endpoint/auth.md)
 - community
     - [search](endpoint/community/search.md)
     - [show](endpoint/community/show.md)
