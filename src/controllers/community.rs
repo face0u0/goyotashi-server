@@ -42,26 +42,33 @@ fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, C
         .map(|com| Json(com))
 }
 
-struct Jwt(pub String);
+pub struct AuthHeader{
+    pub method: String,
+    pub token: String
+}
 
-impl<'a, 'r> FromRequest<'a, 'r> for Jwt {
+impl<'a, 'r> FromRequest<'a, 'r> for AuthHeader {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> Outcome<Jwt, Self::Error> {
-        let keys: Vec<_> = request.headers().get("Authentication").collect();
+    fn from_request(request: &'a Request<'r>) -> Outcome<AuthHeader, Self::Error> {
+        let keys: Vec<_> = request.headers().get("Authorization").collect();
         if keys.len() != 1 {
-            return Outcome::Forward(());
+            return Outcome::Failure((http::Status::Unauthorized, Self::Error::default()));
         }
-        Outcome::Success(Jwt(keys[0].to_string()))
+        let keys: Vec<&str> = keys[0].split_whitespace().collect();
+        if keys.len() != 2 {
+            return Outcome::Failure((http::Status::Unauthorized, Self::Error::default()));
+        }
+        Outcome::Success(AuthHeader{method: keys[0].to_owned(), token: keys[1].to_owned()})
     }
 }
 
 #[post("/<_id>/users")]
-fn join(_id: Option<i32>, jwt: Jwt) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
-    dbg!(&jwt.0);
+fn join(_id: Option<i32>, jwt: AuthHeader) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+    dbg!(&jwt.token);
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
-        .and_then( |community_id| services::member::join(jwt.0, community_id))
+        .and_then( |community_id| services::member::join(jwt.token, community_id))
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
