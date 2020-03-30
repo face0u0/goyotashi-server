@@ -1,4 +1,4 @@
-use crate::models::{Restaurant};
+use crate::models::{Restaurant, NoIdRestaurant};
 use crate::mapper::get_client;
 use crate::errors::*;
 use postgres::Row;
@@ -16,6 +16,25 @@ pub fn find_all_pined_by(community_id: &i32) -> Result<Vec<Restaurant>, ErrCode>
             }
             res_v
         })
+}
+
+pub fn insert_or_update(no_id_restaurant: &NoIdRestaurant) -> Result<Restaurant, ErrCode> {
+    get_client().query(
+        "INSERT INTO restaurants ( place_id, name, lat, lng ) VALUES ( $1, $2, $3, $4 ) \
+        ON CONFLICT (place_id) \
+        DO UPDATE SET name = $5, lat = $6, lng = $7 \
+        RETURNING id, place_id, name, lat, lng",
+        &[&no_id_restaurant.place_id, &no_id_restaurant.name, &no_id_restaurant.lat, &no_id_restaurant.lng,
+            &no_id_restaurant.name, &no_id_restaurant.lat, &no_id_restaurant.lng]
+    )
+        .map_err(|err| ErrCode::new_db_err(&err))
+        .and_then(|rows| extract_one(&rows, Stat::NotFound, "No restaurant found."))
+}
+
+fn extract_one(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<Restaurant, ErrCode>{
+    rows.last()
+        .ok_or(ErrCode::new(stat, err))
+        .map(|row| row_to_restaurant(row))
 }
 
 fn row_to_restaurant(row: &Row) -> Restaurant {
