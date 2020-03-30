@@ -1,5 +1,4 @@
 # コミュニティ表示 `[GET] /communities/{id}`
-`AUTH`
 
 ## request
 ```

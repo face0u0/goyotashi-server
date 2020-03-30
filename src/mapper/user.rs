@@ -8,7 +8,7 @@ pub fn find(_id: &i32) -> Result<User, ErrCode> {
         "SELECT id, uid, name, email FROM users WHERE id = $1",
         &[&_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
 }
 
@@ -17,7 +17,7 @@ pub fn find_by_uid(uid: &String) -> Result<User, ErrCode> {
         "SELECT id, uid, name, email FROM users WHERE uid = $1",
         &[&uid]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
 }
 
@@ -26,7 +26,7 @@ pub fn create(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
         "INSERT INTO users ( name, uid, email ) VALUES ( $1, $2, $3 ) RETURNING id, uid, name, email",
         &[&no_id_user.name, &no_id_user.uid, &no_id_user.email]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid User Object."))
 }
 
@@ -35,7 +35,7 @@ pub fn find_all_included_by(community_id: &i32) -> Result<Vec<User>, ErrCode> {
         "SELECT u.id, u.uid, u.name, u.email FROM members LEFT JOIN users u on members.user_id = u.id WHERE members.community_id = $1",
         &[&community_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .map(|rows| {
             let mut res_v: Vec<User> = vec![];
             for row in &rows{

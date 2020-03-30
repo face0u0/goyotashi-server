@@ -8,7 +8,7 @@ pub fn create(no_id_pin: &NoIdPin) -> Result<Pin, ErrCode> {
         "INSERT INTO pins ( restaurant_id, community_id ) VALUES ( $1, $2 ) RETURNING id, restaurant_id, community_id",
         &[&no_id_pin.restaurant_id, &no_id_pin.community_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid restaurant or community."))
 }
 

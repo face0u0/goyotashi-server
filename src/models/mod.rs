@@ -6,6 +6,13 @@ pub struct ResponseErr {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct Header{
+    pub method: String,
+    pub token: String,
+    pub user: User
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Community {
     pub id: i32,
     pub name: String,

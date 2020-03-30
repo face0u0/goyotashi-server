@@ -1,15 +1,12 @@
 use crate::{
-    models::{NoIdMember, Member},
+    models::{NoIdMember, Member, User},
     mapper,
-    logic,
-    controllers::Jwt,
     errors::*
 };
 
-pub fn join(jwt: Jwt, community_id: i32) -> Result<Member, ErrCode>{
-    let user = logic::authorize::auth(&jwt.token)?;
+pub fn join(current: User, community_id: i32) -> Result<Member, ErrCode>{
     let no_id_member = NoIdMember{
-        user_id: user.id,
+        user_id: current.id,
         community_id
     };
     mapper::member::create(&no_id_member)

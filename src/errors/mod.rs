@@ -5,6 +5,7 @@ use rocket::{
 use rocket_contrib::json::Json;
 
 use crate::models::ResponseErr;
+use std::error::Error;
 
 // #[derive(Debug)]
 pub struct ErrCode{
@@ -17,8 +18,8 @@ impl ErrCode {
         ErrCode {status, msg: msg.to_owned()}
     }
 
-    pub fn new_db_err() -> ErrCode {
-        ErrCode {status: Stat::UnprocessableEntity, msg: "Internal db err.".to_owned()}
+    pub fn new_db_err(err: &dyn Error) -> ErrCode {
+        ErrCode {status: Stat::UnprocessableEntity, msg: err.to_string()}
     }
 
     pub fn render(&self) -> Custom<Json<ResponseErr>> {

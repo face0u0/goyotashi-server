@@ -3,12 +3,12 @@ use crate::mapper::get_client;
 use crate::errors::*;
 use postgres::Row;
 
-pub fn find_all_by_name(name: String) -> Result<Vec<Community>, ErrCode> {
+pub fn find_all_by_name(name: &String) -> Result<Vec<Community>, ErrCode> {
     get_client().query(
         "SELECT id, name, description, public FROM communities WHERE name LIKE $1 AND public = TRUE",
         &[&name]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .map(|rows| {
             let mut com_v: Vec<Community> = vec![];
             for row in &rows{
@@ -18,12 +18,12 @@ pub fn find_all_by_name(name: String) -> Result<Vec<Community>, ErrCode> {
         })
 }
 
-pub fn find(_id: i32) -> Result<Community, ErrCode> {
+pub fn find(_id: &i32) -> Result<Community, ErrCode> {
     get_client().query(
         "SELECT id, name, description, public FROM communities WHERE id = $1",
         &[&_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one_community(&rows, Stat::NotFound, "No community found."))
 }
 
@@ -32,16 +32,16 @@ pub fn create(community: &NoIdCommunity) -> Result<Community, ErrCode> {
         "INSERT INTO communities ( name, description, public ) VALUES ( $1, $2, $3 ) RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 
-pub fn update(_id: i32, community: &NoIdCommunity) -> Result<Community, ErrCode> {
+pub fn update(_id: &i32, community: &NoIdCommunity) -> Result<Community, ErrCode> {
     get_client().query(
         "UPDATE communities SET name = $1, description = $2, public = $3 WHERE id = $4 RETURNING id, name, description, public",
         &[&community.name, &community.description, &community.public, &_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one_community(&rows, Stat::BadRequest, "Invalid Community Object."))
 }
 

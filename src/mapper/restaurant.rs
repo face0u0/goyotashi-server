@@ -8,7 +8,7 @@ pub fn find_all_pined_by(community_id: &i32) -> Result<Vec<Restaurant>, ErrCode>
         "SELECT r.id, r.place_id, r.name, r.lat, r.lng FROM pins LEFT JOIN restaurants r on pins.restaurant_id = r.id WHERE community_id = $1",
         &[&community_id]
     )
-        .map_err(|_| ErrCode::new_db_err())
+        .map_err(|err| ErrCode::new_db_err(&err))
         .map(|rows| {
             let mut res_v: Vec<Restaurant> = vec![];
             for row in &rows{

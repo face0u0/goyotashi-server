@@ -6,16 +6,13 @@ pub mod restaurant;
 
 use rocket;
 use rocket::request::{FromRequest, Outcome};
+use crate::models::{Header};
+use crate::logic;
 
-pub struct Jwt{
-    pub method: String,
-    pub token: String
-}
-
-impl<'a, 'r> FromRequest<'a, 'r> for Jwt {
+impl<'a, 'r> FromRequest<'a, 'r> for Header {
     type Error = ();
 
-    fn from_request(request: &'a rocket::request::Request<'r>) -> Outcome<Jwt, Self::Error> {
+    fn from_request(request: &'a rocket::request::Request<'r>) -> Outcome<Header, Self::Error> {
         let keys: Vec<_> = request.headers().get("Authorization").collect();
         if keys.len() != 1 {
             return Outcome::Failure((rocket::http::Status::Unauthorized, ()));
@@ -24,6 +21,11 @@ impl<'a, 'r> FromRequest<'a, 'r> for Jwt {
         if keys.len() != 2 {
             return Outcome::Failure((rocket::http::Status::Unauthorized, ()));
         }
-        Outcome::Success(Jwt{method: keys[0].to_owned(), token: keys[1].to_owned()})
+        let token = keys[1].to_owned();
+        let user_like = logic::authorize::auth(&token);
+        match user_like{
+            Ok(user) => Outcome::Success(Header{method: keys[0].to_owned(), token, user}),
+            Err(_) => Outcome::Failure((rocket::http::Status::Unauthorized, ()))
+        }
     }
 }

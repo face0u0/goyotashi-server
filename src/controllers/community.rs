@@ -5,9 +5,8 @@ use rocket::{
 };
 use rocket_contrib::json::Json;
 use crate::{
-    models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, NoIdPin, ShowUser},
+    models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, NoIdPin, ShowUser, Header},
     services,
-    controllers::Jwt,
     errors::*,
 };
 
@@ -30,24 +29,24 @@ fn detail(_id: Option<i32>) -> Result<Json<Community>, Custom<Json<ResponseErr>>
 }
 
 #[post("/", data = "<community>")]
-fn create(community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
-    services::community::create(community.into_inner())
+fn create(community: Json<NoIdCommunity>, header: Header) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
+    services::community::create(header.user, community.into_inner())
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
 
 #[put("/<_id>", data = "<community>")]
-fn update(_id: i32, community: Json<NoIdCommunity>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
-    services::community::update(_id, community.into_inner())
+fn update(_id: i32, community: Json<NoIdCommunity>, head: Header) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {
+    services::community::update(head.user, _id, community.into_inner())
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
 
 #[post("/<_id>/users")]
-fn join(_id: Option<i32>, jwt: Jwt) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+fn join(_id: Option<i32>, head: Header) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
-        .and_then( |community_id| services::member::join(jwt, community_id))
+        .and_then( |community_id| services::member::join(head.user, community_id))
         .map_err(|err| err.render())
         .map(|com| Json(com))
 }
