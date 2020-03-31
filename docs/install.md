@@ -4,6 +4,7 @@
 - docker
 - docker-compose
 - postgresql
+- openssl
     
 ```
 # rustをインストール
@@ -12,7 +13,7 @@ $ curl https://sh.rustup.rs -sSf | sh
 $ rustup update
 
 # データベースを立てる
-$ docker-compose up
+$ docker-compose up -d
 
 # テーブル作成
 $ psql -h localhost -p 5432 -U postgres -d goyotashi
@@ -37,3 +38,25 @@ $ cargo run
 DROP SCHEMA IF EXISTS public CASCADE;
 CREATE SCHEMA public;
 ```
+
+## その他（centos）
+- dependency
+```bash
+$ sudo yum install gcc docker postgresql
+```
+
+- docker-compose
+```
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+```
+
+- openssl
+```bash
+$ sudo yum remove openssl
+$ curl -O http://ftp.riken.jp/Linux/cern/centos/7/updates/x86_64/Packages/openssl-libs-1.0.2k-16.el7_6.1.x86_64.rpm
+$ sudo rpm -Uvh --force openssl-libs-1.0.2k-16.el7_6.1.x86_64.rpm
+$ sudo yum -y install openssl openssl-devel
+```
+

@@ -5,6 +5,7 @@ services:
     ports:
       - '80:80'
       - '443:443'
+      - '8000:8000'
     restart: always
     volumes:
       - portal-certificate:/var/lib/https-portal
