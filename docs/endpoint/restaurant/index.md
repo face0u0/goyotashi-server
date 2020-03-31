@@ -6,6 +6,7 @@ none
 ```
 
 ## Response
+### 200 Ok
 ```json
 [
     {

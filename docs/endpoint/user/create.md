@@ -10,3 +10,6 @@ none
 ## Response
 
 ### 201 Created
+```
+none
+```

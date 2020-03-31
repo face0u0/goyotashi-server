@@ -9,7 +9,7 @@ ENV GOYOTASHI_ROOT /goyotashi-server
 WORKDIR $GOYOTASHI_ROOT
 
 ADD . $GOYOTASHI_ROOT
-RUN cargo build
+RUN cargo build --release
 
 EXPOSE 8000
 
