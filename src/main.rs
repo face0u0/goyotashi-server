@@ -15,6 +15,7 @@ fn main() {
     rocket::ignite()
         .mount("/communities", controllers::community::router())
         .mount("/users", controllers::user::router())
+        .mount("/restaurants", controllers::restaurant::router())
         .register(controllers::err::router())
         .launch();
 }
