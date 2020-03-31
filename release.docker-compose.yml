@@ -1,0 +1,27 @@
+version: "3"
+services:
+  server:
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    restart: always
+    environment:
+      DOMAINS: 'api.goyotashi.com -> http://localhost:8000'
+      STAGE: 'production'
+
+  rdbms:
+    image: postgres
+    container_name: goyotashi-database
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: goyotashi
+      TZ: Asia/Tokyo
+    volumes:
+      - goyotashi-data-postgre-prod:/var/lib/postgresql/data
+
+volumes:
+  goyotashi-data-postgre-prod:
