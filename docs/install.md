@@ -42,7 +42,7 @@ CREATE SCHEMA public;
 ## その他（centos）
 - dependency
 ```bash
-$ sudo yum install gcc docker postgresql
+$ sudo yum install docker
 ```
 
 - docker-compose
@@ -52,11 +52,9 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
-- openssl
-```bash
-$ sudo yum remove openssl
-$ curl -O http://ftp.riken.jp/Linux/cern/centos/7/updates/x86_64/Packages/openssl-libs-1.0.2k-16.el7_6.1.x86_64.rpm
-$ sudo rpm -Uvh --force openssl-libs-1.0.2k-16.el7_6.1.x86_64.rpm
-$ sudo yum -y install openssl openssl-devel
+## デプロイ（
 ```
-
+$ docker-compose -f release.docker-compose.yml up --build -d
+$ docker exec -it goyotashi-database psql -h localhost -p 5432 -U postgres -d goyotashi
+(テーブル作成)
+```
