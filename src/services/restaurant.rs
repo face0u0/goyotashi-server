@@ -23,3 +23,7 @@ pub fn search(lat: f64, lng: f64) -> Result<Vec<Restaurant>, ErrCode>{
     }
     Ok(restaurants)
 }
+
+pub fn find(rid: i32) -> Result<Restaurant, ErrCode>{
+    mapper::restaurant::find(&rid)
+}

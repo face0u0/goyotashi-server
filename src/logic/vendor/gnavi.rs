@@ -29,8 +29,8 @@ pub fn search(lat: f64, lng: f64) -> Result<Vec<NoIdRestaurant>, ErrCode>{
 fn fetch_search(lat: f64, lng: f64) -> Result<Vec<NoIdRestaurant>, reqwest::Error>{
     let response: GnaviRes = reqwest::blocking::get(
         format!(
-            "https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid={key}&latitude={lat}&longitude={lng}",
-            lat=lat, lng=lng, key="75e9a269c366fc995cc6d978441ead40"
+            "https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid={key}&latitude={lat}&longitude={lng}&hit_per_page={page}",
+            lat=lat, lng=lng, key="75e9a269c366fc995cc6d978441ead40", page=30
         ).as_str()
     )?.json()?;
     let mut restaurants: Vec<NoIdRestaurant> = Vec::new();

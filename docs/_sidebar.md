@@ -11,9 +11,8 @@
     - [show](endpoint/user/show.md)
     - [join](endpoint/user/create.md)
     - [index](endpoint/user/index.md)
-- gplace
-    - [search](endpoint/gplace/search.md)
 - restaurant
+    - [search](endpoint/restaurant/search.md)
+    - [show](endpoint/restaurant/show.md)
     - [index](endpoint/restaurant/index.md)
     - [add](endpoint/restaurant/add.md)
-- review

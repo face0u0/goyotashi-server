@@ -1,11 +1,16 @@
-# コミュニティに属するレストラン `[GET] /communities/{id}/restaurants`
+# （付近の）レストランを検索 `[GET] /restaurants`
 
 ## Request
-```
-none
-```
+
+|key|val|require|
+|:--|:--|:--|
+|lat|35.112673|o|
+|lng|135.172921|o|
+|name|"やんぱお"||
 
 ## Response
+
+### 200 Ok
 ```json
 [
     {

@@ -31,6 +31,15 @@ pub fn insert_or_update(no_id_restaurant: &NoIdRestaurant) -> Result<Restaurant,
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No restaurant found or created."))
 }
 
+pub fn find(_id: &i32) -> Result<Restaurant, ErrCode> {
+    get_client().query(
+        "SELECT id, vendor, place_id, name, addr, lat, lng FROM restaurants WHERE id = $1",
+        &[&_id]
+    )
+        .map_err(|err| ErrCode::new_db_err(&err))
+        .and_then(|rows| extract_one(&rows, Stat::NotFound, "No restaurant found."))
+}
+
 fn extract_one(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<Restaurant, ErrCode>{
     rows.last()
         .ok_or(ErrCode::new(stat, err))
