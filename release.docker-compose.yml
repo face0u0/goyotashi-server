@@ -5,12 +5,13 @@ services:
     ports:
       - '80:80'
       - '443:443'
-      - '8000:8000'
     restart: always
     volumes:
       - portal-certificate:/var/lib/https-portal
+    extra_hosts:
+      - "local_dev:$LOCAL_HOST_IP"
     environment:
-      DOMAINS: 'api.goyotashi.com -> http://localhost:8000'
+      DOMAINS: 'api.goyotashi.com -> http://local_dev:8000'
       STAGE: 'production'
 
   rdbms:
