@@ -1,11 +1,11 @@
 # コミュニティ表示 `[GET] /communities/{id}`
 
-## request
+## Request
 ```
 none
 ```
 
-## response
+## Response
  
 ### 200 OK
 ```json

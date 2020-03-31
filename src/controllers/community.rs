@@ -5,7 +5,7 @@ use rocket::{
 };
 use rocket_contrib::json::Json;
 use crate::{
-    models::{Community, NoIdCommunity, ResponseErr, Member, Restaurant, ShowUser, Header, NoIdPin},
+    models::{Community, NoIdCommunity, ResponseErr, Restaurant, ShowUser, Header, NoIdPin},
     services,
     errors::*,
 };
@@ -43,12 +43,12 @@ fn update(_id: i32, community: Json<NoIdCommunity>, head: Header) -> Result<Json
 }
 
 #[post("/<_id>/users")]
-fn join(_id: Option<i32>, head: Header) -> Result<Json<Member>, Custom<Json<ResponseErr>>> {
+fn join(_id: Option<i32>, head: Header) -> Result<http::Status, Custom<Json<ResponseErr>>> {
     _id
         .ok_or(ErrCode::new(Stat::BadRequest, "ID is invalid."))
         .and_then( |community_id| services::member::join(head.user, community_id))
         .map_err(|err| err.render())
-        .map(|com| Json(com))
+        .map(|_| http::Status::Created)
 }
 
 #[get("/<_id>/restaurants")]

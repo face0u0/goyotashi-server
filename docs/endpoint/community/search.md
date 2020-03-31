@@ -1,11 +1,11 @@
 # コミュニティ検索 `[GET] /communities`
 
-## request
+## Request
 |key|value|
 |:--|:--|
 |search|"パレット"|
 
-## response
+## Response
  
 ### 200 OK
 ```json

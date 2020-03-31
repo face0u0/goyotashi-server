@@ -1,7 +1,7 @@
 # コミュニティ更新 `[PUT] /communities/{id}`
 `AUTH`
 
-## request
+## Request
 ```json
 {
 	"name":  "やんパオ",
@@ -10,7 +10,7 @@
 }
 ```
 
-## response
+## Response
 
 ### 200 OK
 ```json

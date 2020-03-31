@@ -1,7 +1,7 @@
 # コミュニティ追加 `[POST] /communities`
 `AUTH`
 
-## request
+## Request
 
 ```json
 {
@@ -11,9 +11,9 @@
 }
 ```
 
-## response 
+## Response 
 
-### Ok(200)
+### 200 Ok
 
 - 作成したコミュニティには同時に参加します。
 
