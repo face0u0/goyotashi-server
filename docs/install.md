@@ -1,7 +1,14 @@
 ## 環境構築
+- gcc
+- rustコンパイラ
+- docker
+- docker-compose
+- postgresql
+    
 ```
 # rustをインストール
 $ curl https://sh.rustup.rs -sSf | sh
+# (bashrcをいじるなりしてPATHを通す)
 $ rustup update
 
 # データベースを立てる
