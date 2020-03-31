@@ -20,6 +20,7 @@ services:
     environment:
       TZ: Asia/Tokyo
       DATABASE_URL: rdbms
+      ROCKET_ENV: production
     command: "cargo run"
     links:
       - rdbms
