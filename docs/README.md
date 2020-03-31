@@ -1,6 +1,6 @@
 # Goyotashi Server Document
 
-Goyotashiのサーバーサイドです。
+Goyotashiのサーバーサイドです。ドキュメントは
 
 - https://face0u0.github.io/goyotashi-server
 - https://api.goyotashi.com/docs
