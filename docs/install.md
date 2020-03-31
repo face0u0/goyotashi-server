@@ -19,7 +19,7 @@ $ cargo run
 ```
  INSERT INTO users (uid, name, email) values ('3829-8392-jdij-3728', 'Taro', 'taro@api.goyotashi.com');
  INSERT INTO communities (name, description, public ) values ('パレット', '生協です', true);
- INSERT INTO restaurants (vendor, place_id, name, lat, lng) values (1, '36u16728', 'しばいけしょっぷ', 35.317971, 135.53157);
+ INSERT INTO restaurants (vendor, place_id, name, addr, lat, lng) values (1, '36u16728', 'しばいけしょっぷ', '芝池街', 35.317971, 135.53157);
  INSERT INTO members (user_id, community_id) values (1,1);
  INSERT INTO pins (restaurant_id, community_id) values (1,1);
  INSERT INTO reviews (pin_id, member_id, comment) values (1,1, '良かった');

@@ -26,12 +26,13 @@ CREATE TABLE IF NOT EXISTS restaurants (
     vendor INTEGER NOT NULL,
     place_id VARCHAR(255) NOT NULL,
     name VARCHAR(1024) NOT NULL,
+    addr TEXT NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
     lng DOUBLE PRECISION NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE (place_id)
+    UNIQUE (place_id, vendor)
 );
 CREATE INDEX ON restaurants (name, lat, lng, place_id);
 

@@ -68,6 +68,7 @@ pub struct Restaurant{
     pub vendor: i32,
     pub place_id: String,
     pub name: String,
+    pub addr: String,
     pub lat: f64,
     pub lng: f64,
 }
@@ -77,6 +78,7 @@ pub struct NoIdRestaurant{
     pub place_id: String,
     pub vendor: i32,
     pub name: String,
+    pub addr: String,
     pub lat: f64,
     pub lng: f64,
 }
