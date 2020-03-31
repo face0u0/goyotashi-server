@@ -14,8 +14,8 @@ pub fn add(current: User, no_id_pin: NoIdPin) -> Result<Pin, ErrCode>{
     mapper::pin::create(&no_id_pin)
 }
 
-pub fn search(lat: f64, lng: f64) -> Result<Vec<Restaurant>, ErrCode>{
-    let no_id_restaurants = logic::vendor::gnavi::search(lat, lng)?;
+pub fn search(lat: f64, lng: f64, name: Option<String>) -> Result<Vec<Restaurant>, ErrCode>{
+    let no_id_restaurants = logic::vendor::gnavi::search(lat, lng, name)?;
     let mut restaurants: Vec<Restaurant> = Vec::new();
     for no_id_restaurant in &no_id_restaurants {
         let restaurant = mapper::restaurant::insert_or_update(&no_id_restaurant)?;

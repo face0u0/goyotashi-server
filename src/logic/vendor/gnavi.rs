@@ -21,16 +21,17 @@ pub fn v_id() -> i32{
     return 1;
 }
 
-pub fn search(lat: f64, lng: f64) -> Result<Vec<NoIdRestaurant>, ErrCode>{
-    fetch_search(lat, lng)
+pub fn search(lat: f64, lng: f64, name: Option<String>) -> Result<Vec<NoIdRestaurant>, ErrCode>{
+    fetch_search(lat, lng, name)
         .map_err(|_| ErrCode::new(Stat::UnprocessableEntity, "Gnavi service unavailable."))
 }
 
-fn fetch_search(lat: f64, lng: f64) -> Result<Vec<NoIdRestaurant>, reqwest::Error>{
+fn fetch_search(lat: f64, lng: f64, name: Option<String>) -> Result<Vec<NoIdRestaurant>, reqwest::Error>{
+    let name = name.unwrap_or("".to_owned());
     let response: GnaviRes = reqwest::blocking::get(
         format!(
-            "https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid={key}&latitude={lat}&longitude={lng}&hit_per_page={page}",
-            lat=lat, lng=lng, key="75e9a269c366fc995cc6d978441ead40", page=30
+            "https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid={key}&latitude={lat}&longitude={lng}&hit_per_page={page}&name={name}",
+            lat=lat, lng=lng, key="75e9a269c366fc995cc6d978441ead40", page=30, name=name
         ).as_str()
     )?.json()?;
     let mut restaurants: Vec<NoIdRestaurant> = Vec::new();

@@ -8,9 +8,9 @@ use crate::{
     services,
 };
 
-#[get("/?<lat>&<lng>")]
-fn search(lat: f64, lng: f64) -> Result<Json<Vec<Restaurant>>, Custom<Json<ResponseErr>>> {
-    services::restaurant::search(lat, lng)
+#[get("/?<lat>&<lng>&<name>")]
+fn search(lat: f64, lng: f64, name: Option<String>) -> Result<Json<Vec<Restaurant>>, Custom<Json<ResponseErr>>> {
+    services::restaurant::search(lat, lng, name)
         .map(|v_res| Json(v_res))
         .map_err(|err| err.render())
 }

@@ -24,3 +24,10 @@
     }
 ]
 ```
+### 422 UnprocessableEntity
+- :warning:検索結果が0個の場合もこっちです。（レスポンスの型が違うのでこうなってしまっています。もし厳しいなら言って下さい。）
+```json
+{
+"msg": "Gnavi service unavailable."
+}
+```
