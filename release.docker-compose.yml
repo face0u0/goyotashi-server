@@ -6,6 +6,8 @@ services:
       - '80:80'
       - '443:443'
     restart: always
+    volumes:
+      - portal-certificate:/var/lib/https-portal
     environment:
       DOMAINS: 'api.goyotashi.com -> http://localhost:8000'
       STAGE: 'production'
@@ -25,3 +27,4 @@ services:
 
 volumes:
   goyotashi-data-postgre-prod:
+  portal-certificate:
