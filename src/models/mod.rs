@@ -65,6 +65,7 @@ pub struct NoIdMember{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Restaurant{
     pub id: i32,
+    pub vendor: i32,
     pub place_id: String,
     pub name: String,
     pub lat: f64,
@@ -74,6 +75,7 @@ pub struct Restaurant{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NoIdRestaurant{
     pub place_id: String,
+    pub vendor: i32,
     pub name: String,
     pub lat: f64,
     pub lng: f64,
@@ -89,12 +91,6 @@ pub struct Pin{
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NoIdPin{
     pub restaurant_id: i32,
-    pub community_id: i32
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PostedPin {
-    pub place_id: String,
     pub community_id: i32
 }
 

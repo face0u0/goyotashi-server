@@ -23,6 +23,7 @@ CREATE INDEX ON communities (name);
 
 CREATE TABLE IF NOT EXISTS restaurants (
     id SERIAL NOT NULL,
+    vendor INTEGER NOT NULL,
     place_id VARCHAR(255) NOT NULL,
     name VARCHAR(1024) NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
