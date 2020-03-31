@@ -52,7 +52,7 @@ $ sudo chmod +x /usr/local/bin/docker-compose
 $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
-## デプロイ（
+## デプロイ
 ```
 $ docker-compose -f release.docker-compose.yml up --build -d
 $ docker exec -it goyotashi-database psql -h localhost -p 5432 -U postgres -d goyotashi
