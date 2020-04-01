@@ -1,9 +1,9 @@
-# コミュニティ検索 `[GET] /communities`
+# 自身の所属するコミュニティ `[GET] /me/communities`
 
 ## Request
-|key|value|
-|:--|:--|
-|q|"パレット"|
+```
+none
+```
 
 ## Response
  
@@ -15,6 +15,6 @@
       "name": "パレット",
       "description": "生協のサークル",
       "public": true
-    } 
+    }
 ]
 ```

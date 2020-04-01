@@ -3,6 +3,7 @@ pub mod err;
 pub mod user;
 pub mod review;
 pub mod restaurant;
+pub mod me;
 
 use rocket;
 use rocket::request::{FromRequest, Outcome};

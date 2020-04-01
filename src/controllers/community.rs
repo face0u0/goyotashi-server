@@ -10,14 +10,16 @@ use crate::{
     errors::*,
 };
 
-#[get("/?<search>")]
-fn search(search: Option<String>) -> Result<Json<Vec<Community>>, Custom<Json<ResponseErr>>> {
-    search
+#[get("/?<q>")]
+fn search(q: Option<String>) -> Result<Json<Vec<Community>>, Custom<Json<ResponseErr>>> {
+    q
         .ok_or(ErrCode::new(Stat::BadRequest, "Query 'search' not found."))
         .and_then(|search| services::community::search_by_name(search))
         .map_err(|err| err.render())
         .map(|com_v| Json(com_v))
 }
+
+
 
 #[get("/<_id>")]
 fn detail(_id: Option<i32>) -> Result<Json<Community>, Custom<Json<ResponseErr>>> {

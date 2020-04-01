@@ -25,3 +25,7 @@ pub fn update(current: User, _id: i32, new_community_data: NoIdCommunity) -> Res
     logic::privilege::check_joined(&current, &_id)
         .and_then( |_| mapper::community::update(&_id, &new_community_data))
 }
+
+pub fn belongings(current: User) -> Result<Vec<Community>, ErrCode>{
+    mapper::community::find_all_joined_by(&current.id)
+}

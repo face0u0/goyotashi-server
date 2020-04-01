@@ -12,5 +12,3 @@ ADD . $GOYOTASHI_ROOT
 RUN cargo build --release
 
 EXPOSE 8000
-
-
