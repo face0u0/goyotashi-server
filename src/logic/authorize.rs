@@ -11,7 +11,8 @@ pub fn auth(jwt: &String) -> Result<User, ErrCode>{
     mapper::user::insert_or_update(&NoIdUser{
         name: claims.name,
         email: claims.email,
-        uid: claims.sub
+        uid: claims.sub,
+        icon: claims.picture
     })
 }
 
@@ -24,7 +25,8 @@ struct Claims{
     pub sub: String,
     pub auth_time: u32,
     pub name: String,
-    pub email: String
+    pub email: String,
+    pub picture: String
 }
 
 fn decode_token(token: String) -> Result<Claims, ErrCode> {

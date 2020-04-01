@@ -7,7 +7,7 @@ use crate::{
 pub fn show(_id: i32) -> Result<ShowUser, ErrCode>{
     mapper::user::find(&_id)
         .map(|user| -> ShowUser {
-            ShowUser {id: user.id, name: user.name, email: user.email}
+            ShowUser {id: user.id, name: user.name, icon: user.icon}
         })
 }
 
@@ -18,8 +18,8 @@ pub fn index_included_by(community_id: i32) -> Result<Vec<ShowUser>, ErrCode>{
             for user in &users {
                 show_users.push(ShowUser{
                     id: user.id.to_owned(),
-                    email: user.email.to_owned(),
-                    name: user.name.to_owned()
+                    name: user.name.to_owned(),
+                    icon: user.icon.to_owned()
                 })
             }
             show_users

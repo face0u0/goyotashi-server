@@ -32,21 +32,23 @@ pub struct User {
     pub id: i32,
     pub name: String,
     pub email: String,
-    pub uid: String
+    pub uid: String,
+    pub icon: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct NoIdUser {
     pub name: String,
     pub email: String,
-    pub uid: String
+    pub uid: String,
+    pub icon: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ShowUser {
     pub id: i32,
-    pub email: String,
     pub name: String,
+    pub icon: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

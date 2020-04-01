@@ -5,7 +5,7 @@ use postgres::Row;
 
 pub fn find(_id: &i32) -> Result<User, ErrCode> {
     get_client().query(
-        "SELECT id, uid, name, email FROM users WHERE id = $1",
+        "SELECT id, uid, name, email, icon FROM users WHERE id = $1",
         &[&_id]
     )
         .map_err(|err| ErrCode::new_db_err(&err))
@@ -15,7 +15,7 @@ pub fn find(_id: &i32) -> Result<User, ErrCode> {
 #[allow(dead_code)]
 pub fn find_by_uid(uid: &String) -> Result<User, ErrCode> {
     get_client().query(
-        "SELECT id, uid, name, email FROM users WHERE uid = $1",
+        "SELECT id, uid, name, email, icon FROM users WHERE uid = $1",
         &[&uid]
     )
         .map_err(|err| ErrCode::new_db_err(&err))
@@ -24,11 +24,11 @@ pub fn find_by_uid(uid: &String) -> Result<User, ErrCode> {
 
 pub fn insert_or_update(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
     get_client().query(
-        "INSERT INTO users ( name, uid, email ) VALUES ( $1, $2, $3 ) \
+        "INSERT INTO users ( name, uid, email, icon) VALUES ( $1, $2, $3, $4 ) \
         ON CONFLICT (uid) \
-        DO UPDATE SET name = $4, email = $5 \
-        RETURNING id, uid, name, email",
-        &[&no_id_user.name, &no_id_user.uid, &no_id_user.email, &no_id_user.name, &no_id_user.email]
+        DO UPDATE SET name = $5, email = $6, icon = $7 \
+        RETURNING id, uid, name, email, icon",
+        &[&no_id_user.name, &no_id_user.uid, &no_id_user.email, &no_id_user.icon, &no_id_user.name, &no_id_user.email, &no_id_user.icon]
     )
         .map_err(|err| ErrCode::new_db_err(&err))
         .and_then(|rows| extract_one(&rows, Stat::NotFound, "No user found."))
@@ -37,7 +37,7 @@ pub fn insert_or_update(no_id_user: &NoIdUser) -> Result<User, ErrCode> {
 
 pub fn find_all_included_by(community_id: &i32) -> Result<Vec<User>, ErrCode> {
     get_client().query(
-        "SELECT u.id, u.uid, u.name, u.email FROM members LEFT JOIN users u on members.user_id = u.id WHERE members.community_id = $1",
+        "SELECT u.id, u.uid, u.name, u.email, u.icon FROM members LEFT JOIN users u on members.user_id = u.id WHERE members.community_id = $1",
         &[&community_id]
     )
         .map_err(|err| ErrCode::new_db_err(&err))
@@ -61,6 +61,7 @@ fn row_to_user(row: &Row) -> User {
         id: row.get(0),
         uid: row.get(1),
         name: row.get(2),
-        email: row.get(3)
+        email: row.get(3),
+        icon: row.get(4)
     }
 }

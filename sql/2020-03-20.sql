@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     uid VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
+    icon TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     PRIMARY KEY (id),
