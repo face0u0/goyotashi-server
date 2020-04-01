@@ -14,6 +14,6 @@ none
 {
   "id": 3,
   "name": "Taro",
-  "email": "taro@api.goyotashi.com"
+  "icon": "https://api.goyotashi.com"
 }
 ```
