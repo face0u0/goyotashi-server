@@ -11,8 +11,11 @@ services:
     links:
       - web
     environment:
-      DOMAINS: 'api.goyotashi.com -> http://web:8000'
+      DOMAINS: 'api.goyotashi.com -> http://web:8000, katarite-api.face0u0.net -> http://katarite:3000'
       STAGE: 'production'
+    networks:
+      - home
+      - default
 
   web:
     build: .
@@ -39,3 +42,7 @@ services:
 volumes:
   goyotashi-data-postgre-prod:
   portal-certificate:
+
+networks:
+  home:
+    external: true
