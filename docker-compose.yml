@@ -12,6 +12,7 @@ services:
       TZ: Asia/Tokyo
     volumes:
     - goyotashi-data-postgre:/var/lib/postgresql/data
+    - ./sql:/docker-entrypoint-initdb.d
 
 volumes:
   goyotashi-data-postgre:
