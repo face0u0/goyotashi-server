@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     id SERIAL NOT NULL,
     pin_id INTEGER NOT NULL,
     member_id INTEGER NOT NULL,
+    good BOOLEAN NOT NULL,
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,

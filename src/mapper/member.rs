@@ -23,6 +23,15 @@ pub fn check_joined(no_id_member: &NoIdMember) -> Result<bool, ErrCode> {
     }
 }
 
+pub fn find(no_id_member: &NoIdMember) -> Result<Member, ErrCode> {
+    get_client().query(
+        "SELECT id, user_id, community_id FROM members WHERE user_id = $1 AND community_id = $2",
+        &[&no_id_member.user_id, &no_id_member.community_id]
+    )
+        .map_err(|err| ErrCode::new_db_err(&err))
+        .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid user or community."))
+}
+
 fn extract_one(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<Member, ErrCode>{
     rows.last()
         .ok_or(ErrCode::new(stat, err))

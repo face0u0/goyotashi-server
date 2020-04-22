@@ -99,9 +99,16 @@ pub struct NoIdPin{
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Review{
-    pub id: i32,
+pub struct NoIdReview{
     pub pin_id: i32,
     pub member_id: i32,
+    pub good: bool,
+    pub comment: Option<String>
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PostedReview{
+    pub pin_id: i32,
+    pub good: bool,
     pub comment: Option<String>
 }

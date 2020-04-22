@@ -12,6 +12,15 @@ pub fn create(no_id_pin: &NoIdPin) -> Result<Pin, ErrCode> {
         .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid restaurant or community."))
 }
 
+pub fn find(_id: i32) -> Result<Pin, ErrCode> {
+    get_client().query(
+        "SELECT id, restaurant_id, community_id FROM pins WHERE id = $1",
+        &[&_id]
+    )
+        .map_err(|err| ErrCode::new_db_err(&err))
+        .and_then(|rows| extract_one(&rows, Stat::BadRequest, "Invalid restaurant or community."))
+}
+
 fn extract_one(rows: &Vec<Row>, stat: Stat, err: &'static str) -> Result<Pin, ErrCode>{
     rows.last()
         .ok_or(ErrCode::new(stat, err))

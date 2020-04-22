@@ -17,6 +17,7 @@ fn main() {
         .mount("/users", controllers::user::router())
         .mount("/restaurants", controllers::restaurant::router())
         .mount("/me", controllers::me::router())
+        .mount("/reviews", controllers::review::router())
         .mount("/docs", rocket_contrib::serve::StaticFiles::new("./docs", rocket_contrib::serve::Options::Index))
         .register(controllers::err::router())
         .launch();
