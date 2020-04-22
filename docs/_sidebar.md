@@ -18,3 +18,5 @@
     - [add](endpoint/restaurant/add.md)
 - me
     - [community](endpoint/me/community.md)
+- review
+    - [add/update](endpoint/review/create.md)
