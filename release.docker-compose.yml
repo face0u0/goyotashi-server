@@ -8,6 +8,9 @@ services:
       DATABASE_URL: rdbms
       ROCKET_ENV: production
     command: "cargo run --release"
+    networks:
+      - home
+      - default
     links:
       - rdbms
 
