@@ -1,22 +1,5 @@
 version: "3"
 services:
-  server:
-    image: steveltn/https-portal:1
-    ports:
-      - '80:80'
-      - '443:443'
-    restart: always
-    volumes:
-      - portal-certificate:/var/lib/https-portal
-    links:
-      - web
-    environment:
-      DOMAINS: 'api.goyotashi.com -> http://web:8000, katarite-api.face0u0.net -> http://katarite:3000'
-      STAGE: 'production'
-    networks:
-      - home
-      - default
-
   web:
     build: .
     restart: always
@@ -40,10 +23,8 @@ services:
       - goyotashi-data-postgre-prod:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
 
-
 volumes:
   goyotashi-data-postgre-prod:
-  portal-certificate:
 
 networks:
   home:
